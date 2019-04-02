@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Kinesis Fan Out
+
+Globals:
+  Function:
+    Timeout: 15
+    MemorySize: 512
+    Runtime: nodejs8.10
+    Handler: app.lambdaHandler
+    Tracing: Active
+    Layers:
+      - arn:aws:lambda:us-west-2:410646685895:layer:aws-sdk:2
+
+Resources:
+  DDBFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ddb/
+      Policies:
+        - DynamoDBCrudPolicy: {TableName: !Ref DDBRecords}
+      Environment:
+        Variables:
+          TABLE: !Ref DDBRecords
+      Events:
+        Stream:
+          Type: Kinesis
+          Properties:
+            Stream: !GetAtt DDBConsumer.ConsumerARN
+            StartingPosition: LATEST
+            BatchSize: 100
+  
+  S3Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3/
+      Policies:
+        - S3CrudPolicy: {BucketName: !Ref S3Records}
+      Environment:
+        Variables:
+          BUCKET: !Ref S3Records
+      Events:
+        Stream:
+          Type: Kinesis
+          Properties:
+            Stream: !GetAtt S3Consumer.ConsumerARN
+            StartingPosition: LATEST
+            BatchSize: 100
+
+  DDBKinesisStream:
+    Type: "AWS::Kinesis::Stream"
+    Properties:
+      ShardCount: 4
+  
+  DDBConsumer:
+    Type: "AWS::Kinesis::StreamConsumer"
+    Properties:
+      StreamARN: !GetAtt DDBKinesisStream.Arn
+      ConsumerName: DDBConsumer
+
+  S3Consumer:
+    Type: "AWS::Kinesis::StreamConsumer"
+    Properties:
+      StreamARN: !GetAtt DDBKinesisStream.Arn
+      ConsumerName: S3Consumer
+  
+  DDBRecords:
+    Type: AWS::Serverless::SimpleTable
+
+  S3Records:
+    Type: AWS::S3::Bucket
