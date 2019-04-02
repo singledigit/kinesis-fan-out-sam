@@ -1,6 +1,24 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Kinesis Fan Out
+Description: Kinesis Fan Out to DDB and S3
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: Kinesis-Enhanced-Fan-Out-to-DDB-S3
+    Description: "Creates an Amazon Kinesis Data Stream and uses enhanced fan-out with AWS Lambda functions to write to a an Amazon DynamoDB table and Amazon S3 Bucket"
+    Author: Eric Johnson
+    SpdxLicenseId: MIT
+    LicenseUrl: LICENSE.txt
+    ReadmeUrl: README.md
+    Labels:
+      - Kinesis Data Stream
+      - Enhanced Fan-Out
+      - Lambda
+      - Serverless
+      - Node
+    HomePageUrl: https://github.com/singledigit/kinesis-fan-out-sam
+    SemanticVersion: 0.0.1
+    SourceCodeUrl: https://github.com/singledigit/kinesis-fan-out-sam/releases/tag/v0.0.1
 
 Globals:
   Function:
@@ -47,7 +65,7 @@ Resources:
             StartingPosition: LATEST
             BatchSize: 100
 
-  DDBKinesisStream:
+  KinesisStream:
     Type: "AWS::Kinesis::Stream"
     Properties:
       ShardCount: 4
@@ -55,13 +73,13 @@ Resources:
   DDBConsumer:
     Type: "AWS::Kinesis::StreamConsumer"
     Properties:
-      StreamARN: !GetAtt DDBKinesisStream.Arn
+      StreamARN: !GetAtt KinesisStream.Arn
       ConsumerName: DDBConsumer
 
   S3Consumer:
     Type: "AWS::Kinesis::StreamConsumer"
     Properties:
-      StreamARN: !GetAtt DDBKinesisStream.Arn
+      StreamARN: !GetAtt KinesisStream.Arn
       ConsumerName: S3Consumer
   
   DDBRecords:
@@ -69,3 +87,14 @@ Resources:
 
   S3Records:
     Type: AWS::S3::Bucket
+
+Outputs:
+  KinesisStream:
+    Description: Kinesis Data Stream name
+    Value: !Ref KinesisStream
+  RecordsTable:
+    Description: Records table
+    Value: !Ref DDBRecords
+  RecordsBucket:
+    Description: Records bucket
+    Value: !Ref S3Records
