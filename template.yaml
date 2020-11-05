@@ -4,7 +4,7 @@ Description: Kinesis Fan Out to DDB and S3
 
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: Kinesis-Enhanced-Fan-Out-to-DDB-S3
+    Name: Kinesis-Enhanced-Fan-Out-to-DDB-S3-V2
     Description: "Creates an Amazon Kinesis Data Stream and uses enhanced fan-out with AWS Lambda functions to write to a an Amazon DynamoDB table and Amazon S3 Bucket"
     Author: Eric Johnson
     SpdxLicenseId: MIT
@@ -17,8 +17,8 @@ Metadata:
       - Serverless
       - Node
     HomePageUrl: https://github.com/singledigit/kinesis-fan-out-sam
-    SemanticVersion: 0.0.3
-    SourceCodeUrl: https://github.com/singledigit/kinesis-fan-out-sam/releases/tag/v0.0.3
+    SemanticVersion: 0.0.4
+    SourceCodeUrl: https://github.com/singledigit/kinesis-fan-out-sam/releases/tag/v0.0.4
 
 Globals:
   Function:
