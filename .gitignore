@@ -130,3 +130,5 @@ $RECYCLE.BIN/
 
 out.yaml
 locals.yaml
+
+samconfig.toml

@@ -9,12 +9,8 @@ https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-eas
 
 ## Deployment through SAM
 This application can be deployed using [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
-
-* Package the application
-```bash
-sam package --template-file template.yaml --output-template-file out.yaml --s3-bucket [your-bucket-name]
 ```
 * Deploy the Application
 ```bash
-sam deploy --template-file out.yaml --capabilities CAPABILITY_IAM --stack-name [stack-name]
+sam deploy -g
 ```
