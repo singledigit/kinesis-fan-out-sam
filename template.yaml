@@ -17,8 +17,8 @@ Metadata:
       - Serverless
       - Node
     HomePageUrl: https://github.com/singledigit/kinesis-fan-out-sam
-    SemanticVersion: 0.0.2
-    SourceCodeUrl: https://github.com/singledigit/kinesis-fan-out-sam/releases/tag/v0.0.2
+    SemanticVersion: 0.0.3
+    SourceCodeUrl: https://github.com/singledigit/kinesis-fan-out-sam/releases/tag/v0.0.3
 
 Globals:
   Function:
